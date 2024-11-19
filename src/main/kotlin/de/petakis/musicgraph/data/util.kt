@@ -11,11 +11,11 @@ fun computeEdgeWeight(a: Song, b: Song): Float {
 
     // TODO scaling function subject to change
     // squaring: penalize stark differences in one factor
-    tempoDiff *= WEIGHT_TEMPO
-    energyDiff *= WEIGHT_ENERGY
-    moodDiff *= WEIGHT_MOOD
-    instrumentationDiff *= WEIGHT_INSTRUMENTATION
-    danceabilityDiff *= WEIGHT_DANCEABILITY
+    tempoDiff *= WEIGHT_TEMPO * tempoDiff
+    energyDiff *= WEIGHT_ENERGY * energyDiff
+    moodDiff *= WEIGHT_MOOD * moodDiff
+    instrumentationDiff *= WEIGHT_INSTRUMENTATION * instrumentationDiff
+    danceabilityDiff *= WEIGHT_DANCEABILITY * danceabilityDiff
 
     // also subject to change
     return tempoDiff + energyDiff + moodDiff + instrumentationDiff + danceabilityDiff
