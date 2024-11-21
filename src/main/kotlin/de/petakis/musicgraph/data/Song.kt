@@ -52,7 +52,7 @@ val songs = listOf(
     Song("Claire de Lune", "Debussy", 0.4f, 0.5f, 0.2f, 0.1f, 0f),
     Song("Untitled 1", "Unknown Artist", 0.7f, 0.5f, 0.6f, 0.4f, 0.6f),
     Song("Something About Us", "Daft Punk", 0.4f, 0.1f, 0.2f, 0.3f, 0f),
-    Song("Gypsy Woman", "Crystal Waters", 0.7f, 0.6f, 0.7f, 0.3f, 0.8f),
+    Song("Gypsy Woman", "Crystal Waters", 0.7f, 0.6f, 0.7f, 0.4f, 0.8f),
     Song("Pump Up The Jam", "Technotronic", 0.8f, 0.9f, 0.9f, 0.3f, 0.9f),
     Song("Street Scene (4 Shazz)", "St Germain", 0.6f, 0.4f, 0.6f, 0.4f, 0.6f),
     Song("I'm Not In Love", "10cc", 0.3f, 0.2f, 0.2f, 0.4f, 0f),

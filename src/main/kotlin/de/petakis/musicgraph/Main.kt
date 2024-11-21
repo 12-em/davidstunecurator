@@ -6,6 +6,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.PriorityQueue
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.math.*
 
 const val APP_NAME = "David's TuneCurator"
 const val MAX_DEPTH = 10
@@ -49,6 +50,9 @@ class Main {
     }
 
     // FIXME some paths still return null even though they should be valid
+    /**
+     * PLEASE DO NOT USE (DOESN'T WORK AND NOT REQUIRED
+     */
     fun findPathByDijkstra(graph: Graph<Song>, start: Song, end: Song, minLength: Int): Pair<List<Song>, Float>? {
         val distances = mutableMapOf<Song, Float>().withDefault { Float.MAX_VALUE }
         distances[start] = 0f
@@ -64,7 +68,7 @@ class Main {
         while (priorityQueue.isNotEmpty()) {
             val (currentSong, currentDist, currentLength) = priorityQueue.poll()
 
-            if (currentSong == end && currentLength >= minLength) break
+            if (currentSong == end && currentLength <= minLength) break
 
             val neighbors = graph.getNeighbors(currentSong)
             for((neighbor, weight) in neighbors) {
@@ -94,58 +98,21 @@ class Main {
 
         return path to distances[end]!!
     }
-
-    /**
-     * DOES NOT WORK, PLEASE FIX
-     * Finds a playlist by constructing a curve in a 5-dimensional space of songs.
-     * @param distThreshold The threshold for continuing curve subdivision. Paths with lengths below this won't be subdivided anymore as they're considered smooth enough.
-     */
-    fun findPathByCurve(
-        songs: List<Song>,
-        start: Song,
-        end: Song,
-        distThreshold: Float,
-        visited: MutableSet<Song> = mutableSetOf(),
-        depth: Int = 0
-    ): List<Song> {
-        if(depth >= 2 || start.getDistance(end) < distThreshold) {
-            return listOf(start, end).filter { it !in visited }.also { visited.addAll(it) }
-        }
-
-        val midpoint = start.getMidpoint(end)
-
-        var closest: Song? = null
-        var minDist = Float.MAX_VALUE
-        for (song in songs) {
-            if (song == start || song == end || song == midpoint || song in visited) continue
-            val dist = song.getDistance(midpoint)
-
-            if(dist < minDist) {
-                closest = song
-                minDist = dist
-            }
-        }
-
-        if (closest == null) return listOf(start, end).filter { it !in visited }.also { visited.addAll(it) }
-
-        val a = findPathByCurve(songs, start, closest, distThreshold, visited, depth + 1)
-        val b = findPathByCurve(songs, closest, end, distThreshold, visited, depth + 1)
-
-        val alist = arrayListOf<Song>()
-        alist.addAll(a.dropLast(1))
-        alist.addAll(b)
-
-        return alist
-    }
 }
+
+fun getDepthForSongCount(count: Int) = log2(count.toFloat()).toInt()
 
 fun main() {
     println("Hello World!")
-    val main = Main()
-    val graph = main.buildParallelKNearestGraph(songs, 5, 1f)
-    graph.display()
 
-    val playlist = main.findPathByDijkstra(graph, songs[9], songs[8], 4)
-    println(playlist?.first)
-    println(playlist?.second)
+    val curator = Curator()
+
+    curator.loadLibraryFile("PATH_TO_LIBRARY")
+
+    val songs = curator.getAllSongsFromLibraries()
+    println(songs)
+
+    // tests
+    val playlist = curator.findPathByCurve(songs, songs[0], songs.last(), 0.01f, mutableSetOf(), getDepthForSongCount(3))
+    println(playlist)
 }
